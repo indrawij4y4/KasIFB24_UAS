@@ -18,6 +18,7 @@ if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
         $tmpBase . '/storage/app/public',
         $tmpBase . '/storage/framework',
         $tmpBase . '/storage/framework/cache',
+        $tmpBase . '/storage/framework/cache/data',
         $tmpBase . '/storage/framework/sessions',
         $tmpBase . '/storage/framework/views',
         $tmpBase . '/storage/logs',
@@ -30,24 +31,18 @@ if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
         }
     }
 
-    // Set environment variables to override Laravel paths
-    putenv('APP_STORAGE_PATH=' . $tmpBase . '/storage');
-    $_ENV['APP_STORAGE_PATH'] = $tmpBase . '/storage';
+    // Set environment variables BEFORE Laravel loads
+    putenv('APP_SERVICES_CACHE=' . $tmpBase . '/bootstrap/cache/services.php');
+    putenv('APP_PACKAGES_CACHE=' . $tmpBase . '/bootstrap/cache/packages.php');
+    putenv('APP_CONFIG_CACHE=' . $tmpBase . '/bootstrap/cache/config.php');
+    putenv('APP_ROUTES_CACHE=' . $tmpBase . '/bootstrap/cache/routes.php');
+    putenv('APP_EVENTS_CACHE=' . $tmpBase . '/bootstrap/cache/events.php');
 
-    // Also need to handle bootstrap/cache - symlink or copy
-    $bootstrapCacheSource = $basePath . '/bootstrap/cache';
-    $bootstrapCacheTmp = $tmpBase . '/bootstrap/cache';
-
-    // Copy any existing cache files
-    if (is_dir($bootstrapCacheSource)) {
-        $files = glob($bootstrapCacheSource . '/*.php');
-        foreach ($files as $file) {
-            $dest = $bootstrapCacheTmp . '/' . basename($file);
-            if (!file_exists($dest)) {
-                @copy($file, $dest);
-            }
-        }
-    }
+    $_ENV['APP_SERVICES_CACHE'] = $tmpBase . '/bootstrap/cache/services.php';
+    $_ENV['APP_PACKAGES_CACHE'] = $tmpBase . '/bootstrap/cache/packages.php';
+    $_ENV['APP_CONFIG_CACHE'] = $tmpBase . '/bootstrap/cache/config.php';
+    $_ENV['APP_ROUTES_CACHE'] = $tmpBase . '/bootstrap/cache/routes.php';
+    $_ENV['APP_EVENTS_CACHE'] = $tmpBase . '/bootstrap/cache/events.php';
 }
 
 // Wrap everything in try-catch to capture any errors
@@ -64,6 +59,7 @@ try {
             'tmp_storage_exists' => is_dir('/tmp/storage'),
             'tmp_storage_writable' => is_writable('/tmp/storage'),
             'tmp_bootstrap_cache_exists' => is_dir('/tmp/bootstrap/cache'),
+            'services_cache' => getenv('APP_SERVICES_CACHE'),
         ], JSON_PRETTY_PRINT);
         exit;
     }
@@ -80,11 +76,15 @@ try {
     require $autoloadPath;
 
     // Bootstrap Laravel
+    /** @var \Illuminate\Foundation\Application $app */
     $app = require_once $basePath . '/bootstrap/app.php';
 
-    // Override storage path for Vercel
+    // Override storage path for Vercel BEFORE handling request
     if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
         $app->useStoragePath('/tmp/storage');
+
+        // Also bind the bootstrap cache path
+        $app->instance('path.bootstrap.cache', '/tmp/bootstrap/cache');
     }
 
     // Handle request
