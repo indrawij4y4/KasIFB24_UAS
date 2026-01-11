@@ -3,7 +3,9 @@
     "framework": null,
     "functions": {
         "api/index.php": {
-            "runtime": "vercel-php@0.7.4"
+            "runtime": "vercel-php@0.7.4",
+            "memory": 1024,
+            "maxDuration": 30
         }
     },
     "routes": [
@@ -18,7 +20,7 @@
     "env": {
         "VERCEL": "1",
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
+        "APP_DEBUG": "false",
         "APP_URL": "https://kas-ifb-24-uas.vercel.app",
         "VITE_APP_URL": "https://kas-ifb-24-uas.vercel.app",
         "LOG_CHANNEL": "stderr",
