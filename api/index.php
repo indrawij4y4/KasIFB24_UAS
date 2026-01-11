@@ -1,10 +1,20 @@
 <?php
 
-// Set the document root for Vercel
-$_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/../public';
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 
-// Change to Laravel's public directory
-chdir(__DIR__ . '/../public');
+define('LARAVEL_START', microtime(true));
 
-// Handle the request through Laravel's entry point
-require __DIR__ . '/../public/index.php';
+// Set base path for Vercel - api/index.php is one level down
+$basePath = dirname(__DIR__);
+
+// Skip maintenance mode check for serverless (no writable storage)
+
+// Register the Composer autoloader...
+require $basePath . '/vendor/autoload.php';
+
+// Bootstrap Laravel and handle the request...
+/** @var Application $app */
+$app = require_once $basePath . '/bootstrap/app.php';
+
+$app->handleRequest(Request::capture());
