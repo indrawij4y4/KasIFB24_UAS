@@ -58,6 +58,30 @@ if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
 
 // Wrap everything in try-catch to capture any errors
 try {
+    // Setup Database Endpoint (Temporary)
+    if (isset($_GET['setup_database']) && $_GET['key'] === 'rahasia123') {
+        require $basePath . '/vendor/autoload.php';
+        $app = require_once $basePath . '/bootstrap/app.php';
+
+        if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
+            $app->useStoragePath('/tmp/storage');
+        }
+
+        $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+
+        echo "<pre>";
+        echo "Running Migrations...\n";
+        $kernel->call('migrate', ['--force' => true]);
+        echo $kernel->output();
+
+        echo "\nRunning Seeders (Users only)...\n";
+        // Assuming DatabaseSeeder calls UserSeeder
+        $kernel->call('db:seed', ['--force' => true]);
+        echo $kernel->output();
+        echo "</pre>";
+        exit;
+    }
+
     // Debug endpoint
     if (isset($_GET['debug'])) {
         header('Content-Type: application/json');
