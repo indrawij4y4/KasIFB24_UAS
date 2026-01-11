@@ -10,8 +10,17 @@ Platform pencatatan dan monitoring kas kelas yang akurat, transparan, dan dapat 
 
 
 
+🔗 **Live Demo:** 
+- **Frontend:** [https://indrawij4y4.github.io/KasIFB24_UAS/](https://indrawij4y4.github.io/KasIFB24_UAS/)
+- **API Backend:** [https://kas-ifb-24-uas.vercel.app/api](https://kas-ifb-24-uas.vercel.app/api)
 
-🔗 **Live Demo:** [https://kas-ifb24.gt.tc/](https://kas-ifb24.gt.tc)
+## 🌐 Deployment
+
+| Layer | Platform | URL |
+|-------|----------|-----|
+| Frontend | GitHub Pages | https://indrawij4y4.github.io/KasIFB24_UAS/ |
+| Backend API | Vercel (PHP Serverless) | https://kas-ifb-24-uas.vercel.app/api |
+| Database | TiDB Cloud (Serverless) | Singapore Region |
 
 ## 📋 Fitur
 
