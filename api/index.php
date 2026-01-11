@@ -60,7 +60,31 @@ try {
             'tmp_storage_writable' => is_writable('/tmp/storage'),
             'tmp_bootstrap_cache_exists' => is_dir('/tmp/bootstrap/cache'),
             'services_cache' => getenv('APP_SERVICES_CACHE'),
+            'request_uri' => $_SERVER['REQUEST_URI'] ?? 'not set',
+            'script_name' => $_SERVER['SCRIPT_NAME'] ?? 'not set',
+            'path_info' => $_SERVER['PATH_INFO'] ?? 'not set',
         ], JSON_PRETTY_PRINT);
+        exit;
+    }
+
+    // Routes debug - shows what Laravel sees
+    if (isset($_GET['routes'])) {
+        require $basePath . '/vendor/autoload.php';
+        $app = require_once $basePath . '/bootstrap/app.php';
+        if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
+            $app->useStoragePath('/tmp/storage');
+        }
+
+        header('Content-Type: application/json');
+        $routes = [];
+        foreach (\Illuminate\Support\Facades\Route::getRoutes() as $route) {
+            $routes[] = [
+                'uri' => $route->uri(),
+                'methods' => $route->methods(),
+                'name' => $route->getName(),
+            ];
+        }
+        echo json_encode(['routes' => $routes], JSON_PRETTY_PRINT);
         exit;
     }
 
