@@ -4,7 +4,7 @@ import viteCompression from 'vite-plugin-compression';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/', // Changed from /kasIFB24_UAS/ to / for Vercel
+  base: '/KasIFB24_UAS/', // GitHub Pages base path
   plugins: [
     react(),
     viteCompression()
