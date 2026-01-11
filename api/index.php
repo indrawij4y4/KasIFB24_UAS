@@ -4,6 +4,17 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+// Handle CORS preflight requests BEFORE loading Laravel
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: https://indrawij4y4.github.io');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, Accept, X-Requested-With');
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400');
+    http_response_code(204);
+    exit;
+}
+
 // Set base path for Vercel
 $basePath = dirname(__DIR__);
 
