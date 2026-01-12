@@ -1,5 +1,4 @@
 // API Configuration for Laravel Backend
-// API Configuration for Laravel Backend
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://kas-ifb-24-uas.vercel.app/api';
 
 // Token management

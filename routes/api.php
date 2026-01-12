@@ -21,17 +21,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public routes
-Route::get('/test', function () {
-    return response()->json([
-        'status' => 'ok',
-        'message' => 'API is working!',
-        'php_version' => PHP_VERSION,
-        'laravel_version' => app()->version(),
-    ]);
-});
-
-
-
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
 
 // Export routes - use token-query middleware for browser file downloads
