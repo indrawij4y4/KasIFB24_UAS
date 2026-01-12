@@ -48,7 +48,7 @@ export function LoginScreen() {
                                 <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover rounded-xl" />
                             </div>
                             <div>
-                                <h2 className="text-sm font-bold tracking-[0.2em] text-cyan-400 uppercase mb-2">Monitoring Dana Kelas</h2>
+                                <h2 className="text-sm font-bold tracking-[0.2em] text-cyan-400 uppercase mb-2">Kas IFB24</h2>
                                 <p className="text-sm font-medium text-slate-400">Informatika Engineering • IFB24</p>
                             </div>
                         </div>

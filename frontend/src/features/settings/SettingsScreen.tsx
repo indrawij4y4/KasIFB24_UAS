@@ -593,11 +593,11 @@ export const SettingsScreen = () => {
                 {/* Section 5: About */}
                 <div className="bg-gradient-to-br from-violet-500/10 via-card to-indigo-500/10 rounded-3xl border border-border overflow-hidden shadow-sm">
                     <div className="p-8 md:p-10 text-center">
-                        <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-violet-500/25">
-                            <Lucide.LayoutDashboard className="w-8 h-8" />
+                        <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-violet-500/25 overflow-hidden">
+                            <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
                         </div>
 
-                        <h2 className="text-xl font-black text-foreground mb-2">Kelas IFB24 Finance</h2>
+                        <h2 className="text-xl font-black text-foreground mb-2">Kas IFB24</h2>
                         <div className="inline-flex items-center px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-bold uppercase tracking-wider mb-4">
                             v1.0.0 Public Beta
                         </div>

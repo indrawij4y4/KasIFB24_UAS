@@ -29,7 +29,7 @@ export function Sidebar() {
                 </div>
                 <div>
                     <h1 className="text-lg font-black text-primary tracking-tight">
-                        KAS KELAS
+                        Kas IFB24
                     </h1>
                     <p className="text-xs text-slate-400 dark:text-muted-foreground font-medium">
                         Panel Admin & Siswa
