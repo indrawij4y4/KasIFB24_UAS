@@ -53,7 +53,7 @@ export function InputInScreen() {
     const [nominal, setNominal] = useState('');
 
     // Track last applied configuration to prevent overwriting manual edits
-    const lastConfigRef = useRef<{ m: string, y: string } | null>(null);
+    // const lastConfigRef = useRef<{ m: string, y: string } | null>(null); // Removed as we use stronger Smart Logic now
 
     // Fetch users for dropdown
     const { data: users, isLoading: loadingUsers } = useQuery({
