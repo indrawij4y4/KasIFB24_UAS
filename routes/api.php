@@ -30,6 +30,10 @@ Route::get('/test', function () {
     ]);
 });
 
+Route::get('/ping', function () {
+    return response()->json(['status' => 'ok', 'message' => 'Pong!', 'time' => now()]);
+});
+
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
 
 // Export routes - use token-query middleware for browser file downloads
