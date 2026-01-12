@@ -102,8 +102,35 @@ class PemasukanController extends Controller
             'nominal' => 'required|numeric|min:0',
         ]);
 
-        // Removed existing check to allow multiple payments (Top-up) logic
-        // The matrix and stats will sum them up.
+        // Check for existing payment to handle "Additive / Top-up" logic respecting Unique Constraint
+        $existing = Pemasukan::where('user_id', $request->user_id)
+            ->where('bulan', $request->bulan)
+            ->where('tahun', $request->tahun)
+            ->where('minggu_ke', $request->minggu_ke)
+            ->first();
+
+        if ($existing) {
+            // Add new nominal to existing nominal (Cicilan/Top-up)
+            $newNominal = $existing->nominal + $request->nominal;
+            $existing->update([
+                'nominal' => $newNominal,
+                // Touch created_at to bump it to top of history? 
+                // Alternatively, we rely on updated_at, but dashboard sorts by created_at.
+                // Let's explicitly update created_at to make it appear as "Latest Activity"
+                'created_at' => now(),
+            ]);
+
+            // Invalidate caches
+            Cache::forget('dashboard_stats');
+            $bulanInt = (int) $request->bulan;
+            $tahunInt = (int) $request->tahun;
+            Cache::forget("arrears_list_{$bulanInt}_{$tahunInt}");
+
+            return response()->json([
+                'message' => 'Pembayaran berhasil ditambahkan (Top-up).',
+                'data' => $existing,
+            ], 200);
+        }
 
         $pemasukan = Pemasukan::create([
             'user_id' => $request->user_id,
