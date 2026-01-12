@@ -24,8 +24,8 @@ class ArrearsController extends Controller
 
         $cacheKey = "arrears_list_{$bulan}_{$tahun}";
 
-        // Cache for 10 minutes
-        return \Illuminate\Support\Facades\Cache::remember($cacheKey, 600, function () use ($bulan, $tahun) {
+        // Cache for 2 minutes for faster updates after payments
+        return \Illuminate\Support\Facades\Cache::remember($cacheKey, 120, function () use ($bulan, $tahun) {
             $weeklyFee = Setting::getPeriodFee($bulan, $tahun);
             $weeksPerMonth = Setting::getPeriodWeeks($bulan, $tahun);
 
@@ -52,12 +52,13 @@ class ArrearsController extends Controller
             $arrears = [];
 
             foreach ($users as $user) {
-                $payments = $user->pemasukan->keyBy('minggu_ke');
+                // Group by week and sum to handle multiple payments (additive/top-up)
+                $payments = $user->pemasukan->groupBy('minggu_ke')->map(fn($g) => $g->sum('nominal'));
                 $unpaidWeeks = [];
 
                 for ($week = 1; $week <= $weeksPerMonth; $week++) {
-                    $payment = $payments->get($week);
-                    if (!$payment || (float) $payment->nominal < (float) $weeklyFee) {
+                    $paid = $payments->get($week) ?? 0;
+                    if ($paid < $weeklyFee) {
                         $unpaidWeeks[] = $week;
                     }
                 }
