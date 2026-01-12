@@ -166,6 +166,7 @@ export const pemasukanApi = {
         user_id: number;
         bulan: number;
         tahun: number;
+        minggu_ke?: number; // Optional: Pay specific week fully
     }) => {
         return apiFetch('/pemasukan/bulk', {
             method: 'POST',

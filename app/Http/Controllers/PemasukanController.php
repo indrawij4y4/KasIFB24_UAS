@@ -222,11 +222,13 @@ class PemasukanController extends Controller
             'user_id' => 'required|exists:users,id',
             'bulan' => 'required|integer|min:1|max:12',
             'tahun' => 'required|integer|min:2020|max:2099',
+            'minggu_ke' => 'nullable|integer|min:1|max:5', // Optional: Pay specific week fully
         ]);
 
         $userId = $request->user_id;
         $bulan = $request->bulan;
         $tahun = $request->tahun;
+        $targetWeek = $request->minggu_ke;
 
         // Get configuration
         $weeklyFee = Setting::getPeriodFee($bulan, $tahun);
@@ -247,16 +249,22 @@ class PemasukanController extends Controller
         $updatedCount = 0;
         $totalNominal = 0;
 
-        // Loop through all expected weeks
-        for ($week = 1; $week <= $weeksPerMonth; $week++) {
+        // Determine range of weeks to pay
+        $startWeek = $targetWeek ? $targetWeek : 1;
+        $endWeek = $targetWeek ? $targetWeek : $weeksPerMonth;
+
+        // Loop through target weeks
+        for ($week = $startWeek; $week <= $endWeek; $week++) {
             $existing = $existingPayments->get($week);
 
             if ($existing) {
-                // If exists but partial/underpaid, update it
+                // If exists but partial/underpaid, update it to FULL FEE ("Make Full" Logic)
+                // This ensures we don't double charge, just top up to the full amount
                 if ((float) $existing->nominal < (float) $weeklyFee) {
+                    $diff = $weeklyFee - $existing->nominal;
                     $existing->update(['nominal' => $weeklyFee]);
                     $updatedCount++;
-                    $totalNominal += ($weeklyFee - $existing->nominal);
+                    $totalNominal += $diff;
                 }
                 continue;
             }

@@ -96,14 +96,14 @@ export function ArrearsScreen() {
                     tahun: parseInt(selectedYear),
                 });
             } else {
-                // Single week payment
-                if (!settings) return;
-                return pemasukanApi.store({
+                // Single week payment ("Make Full")
+                // We use bulkStore with minggu_ke to leverage the "Make Full" logic (Top up remaining only)
+                // instead of store() which is now Additive (would result in double charge if not careful)
+                return pemasukanApi.bulkStore({
                     user_id: paymentModal.userId,
                     bulan: parseInt(selectedMonth),
                     tahun: parseInt(selectedYear),
                     minggu_ke: paymentModal.week,
-                    nominal: settings.weeklyFee,
                 });
             }
         },
