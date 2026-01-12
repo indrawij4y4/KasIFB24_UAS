@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -34,7 +34,8 @@ const getCurrentWeek = () => {
     const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
     const dayOfMonth = now.getDate();
     const firstDayOfWeek = firstDay.getDay();
-    return Math.ceil((dayOfMonth + firstDayOfWeek) / 7);
+    const week = Math.ceil((dayOfMonth + firstDayOfWeek) / 7);
+    return week > 5 ? 5 : week; // Cap at 5 generally
 };
 
 export function InputInScreen() {
@@ -50,6 +51,9 @@ export function InputInScreen() {
     const [selectedYear] = useState(getCurrentYear().toString());
     const [selectedWeek, setSelectedWeek] = useState(getCurrentWeek().toString());
     const [nominal, setNominal] = useState('');
+
+    // Track last applied configuration to prevent overwriting manual edits
+    const lastConfigRef = useRef<{ m: string, y: string } | null>(null);
 
     // Fetch users for dropdown
     const { data: users, isLoading: loadingUsers } = useQuery({
@@ -122,10 +126,15 @@ export function InputInScreen() {
 
     // 2. Handle Nominal Default from Settings
     useEffect(() => {
-        if (settings?.weeklyFee) {
-            setNominal(settings.weeklyFee.toString());
+        if (settings?.weeklyFee !== undefined) {
+            // Only update if we haven't applied this month/year config yet
+            // This ensures we don't overwrite user changes if they just type
+            if (lastConfigRef.current?.m !== selectedMonth || lastConfigRef.current?.y !== selectedYear) {
+                setNominal(settings.weeklyFee.toString());
+                lastConfigRef.current = { m: selectedMonth, y: selectedYear };
+            }
         }
-    }, [settings?.weeklyFee]); // ONLY run when the setting itself changes (e.g. changing month)
+    }, [settings, selectedMonth, selectedYear]); // Depend on settings object and context
 
     // Mutation for saving pemasukan
     const mutation = useMutation({
