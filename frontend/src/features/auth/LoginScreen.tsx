@@ -102,7 +102,7 @@ export function LoginScreen() {
                     <div className="w-[60px] h-[60px] bg-white/10 backdrop-blur-md rounded-2xl p-1 flex items-center justify-center shadow-2xl border border-white/10 mb-4 transform hover:scale-105 transition-transform">
                         <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover rounded-xl" />
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white">Kelas IFB24</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-white">Kas IFB24</h1>
                     <p className="text-sm font-medium text-slate-500 mt-1">Informatika Engineering</p>
                 </div>
 

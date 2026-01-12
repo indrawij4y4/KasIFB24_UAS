@@ -101,22 +101,31 @@ export function InputInScreen() {
         }
     }, [users, selectedUser]);
 
-    // Set default nominal based on weekly fee from settings and reset week if invalid
+    // 1. Handle Week Selection automatically
     useEffect(() => {
-        // Auto-select first available week if current selection is invalid/paid
         if (weekOptions.length > 0) {
-            // If selected week is not in options (because it's filtered out), select the first one
-            if (!weekOptions.find(opt => opt.value === selectedWeek)) {
+            // If selected week is not in options (because it's filtered out/paid), select the first available
+            // Check against values in weekOptions (which are strings)
+            const isSelectedValid = weekOptions.some(opt => opt.value === selectedWeek);
+            if (!isSelectedValid) {
+                // Determine the "next" logical week to select? 
+                // Or just the first available one as default
                 setSelectedWeek(weekOptions[0].value);
             }
         } else {
-            setSelectedWeek('-');
+            // No weeks available (all paid)
+            if (selectedWeek !== '-') {
+                setSelectedWeek('-');
+            }
         }
+    }, [weekOptions, selectedWeek]); // Runs when options calculation changes
 
+    // 2. Handle Nominal Default from Settings
+    useEffect(() => {
         if (settings?.weeklyFee) {
             setNominal(settings.weeklyFee.toString());
         }
-    }, [settings?.weeklyFee, selectedMonth, selectedYear, studentsData, selectedUser, weekOptions, selectedWeek]); // Dependencies for nominal and week update
+    }, [settings?.weeklyFee]); // ONLY run when the setting itself changes (e.g. changing month)
 
     // Mutation for saving pemasukan
     const mutation = useMutation({
