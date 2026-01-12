@@ -1,7 +1,6 @@
 // API Configuration for Laravel Backend
 // API Configuration for Laravel Backend
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://kas-ifb-24-uas.vercel.app/api';
-console.log('Computed API_BASE_URL:', API_BASE_URL); // DEBUG LOG
 
 // Token management
 const getToken = (): string | null => localStorage.getItem('auth_token');
@@ -26,25 +25,17 @@ async function apiFetch<T>(
         headers['Content-Type'] = 'application/json';
     }
 
-    console.log(`[API Request] ${options.method || 'GET'} ${endpoint}`);
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
+    });
 
-    try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            ...options,
-            headers,
-        });
-
-        if (!response.ok) {
-            console.error('[API Error Response]', response.status, response.statusText);
-            const error = await response.json().catch(() => ({ message: 'Network error or Invalid JSON response' }));
-            throw new Error(error.message || `HTTP ${response.status}`);
-        }
-
-        return response.json();
-    } catch (err) {
-        console.error('[API Fetch Failure]', err);
-        throw err;
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'Network error' }));
+        throw new Error(error.message || `HTTP ${response.status}`);
     }
+
+    return response.json();
 }
 
 // Types
