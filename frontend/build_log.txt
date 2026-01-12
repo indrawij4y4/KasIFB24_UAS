@@ -1,6 +1,0 @@
-src/features/admin/ArrearsScreen.tsx(101,13): error TS2304: Cannot find name 'setSuccessModal'.
-src/features/admin/ArrearsScreen.tsx(264,25): error TS2304: Cannot find name 'successModal'.
-src/features/admin/ArrearsScreen.tsx(265,32): error TS2304: Cannot find name 'setSuccessModal'.
-src/features/matrix/MatrixScreen.tsx(28,11): error TS6133: 'user' is declared but its value is never read.
-src/features/matrix/MatrixScreen.tsx(311,115): error TS2304: Cannot find name 'selectedYear'.
-src/features/settings/SettingsScreen.tsx(7,1): error TS6133: 'Select' is declared but its value is never read.
