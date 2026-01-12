@@ -122,6 +122,7 @@ class PemasukanController extends Controller
 
             // Invalidate caches
             Cache::forget('dashboard_stats');
+            Cache::forget('leaderboard');
             $bulanInt = (int) $request->bulan;
             $tahunInt = (int) $request->tahun;
             Cache::forget("arrears_list_{$bulanInt}_{$tahunInt}");
@@ -144,6 +145,7 @@ class PemasukanController extends Controller
 
         // Invalidate dashboard cache
         Cache::forget('dashboard_stats');
+        Cache::forget('leaderboard');
 
         // Invalidate arrears cache for this period
         $bulanInt = (int) $request->bulan;
@@ -174,6 +176,7 @@ class PemasukanController extends Controller
 
         // Invalidate dashboard cache
         Cache::forget('dashboard_stats');
+        Cache::forget('leaderboard');
 
         // Invalidate arrears cache for this period
         $bulanInt = (int) $pemasukan->bulan;
@@ -201,6 +204,7 @@ class PemasukanController extends Controller
 
         // Invalidate dashboard cache
         Cache::forget('dashboard_stats');
+        Cache::forget('leaderboard');
 
         // Invalidate arrears cache for this period
         $bulanInt = (int) $bulan;
@@ -287,6 +291,7 @@ class PemasukanController extends Controller
 
         // Invalidate caches
         Cache::forget('dashboard_stats');
+        Cache::forget('leaderboard');
         $bulanInt = (int) $bulan;
         $tahunInt = (int) $tahun;
         $arrearsCacheKey = "arrears_list_{$bulanInt}_{$tahunInt}";
